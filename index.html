@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Martabak POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ==================== CSS STYLES (style.css) ==================== */
+        :root {
+            --primary: #ea580c; /* Orange */
+            --primary-hover: #c2410c;
+            --secondary: #dc2626; /* Red */
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --gray: #94a3b8;
+            --gray-light: #e2e8f0;
+            --success: #16a34a;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--dark); margin-bottom: 15px; }
+        .text-primary { color: var(--primary); }
+        .text-secondary { color: var(--secondary); }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-white { color: var(--white); }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background-color: var(--primary); color: var(--white); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); color: var(--white); }
+        .btn-danger:hover { background-color: #b91c1c; }
+        .btn-success { background-color: var(--success); color: var(--white); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--gray); color: var(--dark); }
+        
+        /* Inputs & Forms */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus { border-color: var(--primary); }
+
+        /* Login Screen */
+        #login-screen {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h2 { color: var(--primary); font-weight: 700; margin-bottom: 20px; }
+        .login-logo { font-size: 48px; color: var(--primary); margin-bottom: 10px; }
+
+        /* Main Layout */
+        #app-screen { display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            border-right: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sidebar-header h2 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 700; }
+        .nav-menu { flex: 1; padding: 20px 0; list-style: none; overflow-y: auto; }
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary);
+            background-color: #fff7ed;
+            border-right: 4px solid var(--primary);
+        }
+        .user-info { padding: 20px; border-top: 1px solid var(--gray-light); }
+        .user-info p { font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .topbar {
+            height: 60px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .menu-toggle {
+            font-size: 24px;
+            color: var(--dark);
+            cursor: pointer;
+            display: none; /* Show only on mobile */
+        }
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Cards & Grids */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .stat-icon.orange { background: #ffedd5; color: var(--primary); }
+        .stat-icon.red { background: #fee2e2; color: var(--secondary); }
+        .stat-icon.green { background: #dcfce7; color: var(--success); }
+        .stat-icon.blue { background: #dbeafe; color: #3b82f6; }
+        .stat-details h3 { margin: 0; font-size: 20px; font-weight: 700; }
+        .stat-details p { margin: 0; font-size: 13px; color: var(--gray); }
+
+        /* Tables */
+        .table-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            padding: 20px;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--gray-light); font-size: 14px; }
+        th { font-weight: 600; color: var(--gray); background: #f8fafc; }
+        tbody tr:hover { background-color: #f1f5f9; }
+
+        /* POS Section Layout */
+        .pos-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+        .pos-products {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .product-card {
+            border: 1px solid var(--gray-light);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .product-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15); transform: translateY(-2px); }
+        .product-card h4 { margin: 0 0 5px 0; font-size: 14px; font-weight: 600; }
+        .product-card p { margin: 0; color: var(--primary); font-weight: 700; font-size: 13px; }
+
+        .pos-cart {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 15px; }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--gray-light);
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { margin: 0; font-size: 14px; }
+        .cart-item-info p { margin: 0; font-size: 12px; color: var(--gray); }
+        .cart-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 10px;
+        }
+        .qty-btn { background: var(--gray-light); border: none; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; }
+        .cart-total {
+            border-top: 2px solid var(--gray-light);
+            padding-top: 15px;
+        }
+        .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 18px; }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray); }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .pos-container { grid-template-columns: 1fr; }
+            .pos-cart { height: 400px; }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                height: 100vh;
+            }
+            .sidebar.active { left: 0; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+            .menu-toggle { display: block; }
+            .pos-container { display: flex; flex-direction: column; }
+            .grid-cards { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .grid-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HTML STRUCTURE (index.html) ==================== -->
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <i class="fa-solid fa-store login-logo"></i>
+            <h2>Team Martabak POS</h2>
+            <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">Silakan login untuk melanjutkan</p>
+            <div id="login-error" class="text-danger hidden" style="margin-bottom: 15px; font-size: 13px;">Username atau Password salah!</div>
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group" style="text-align: left;">
+                    <label>Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; padding: 12px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk
+                </button>
+            </form>
+            <p style="margin-top: 20px; font-size: 12px; color: var(--gray);">Admin: admin/admin | Kasir: kasir/kasir</p>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div id="app-screen" class="hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-store text-primary"></i> Martabak POS</h2>
+                <i class="fa-solid fa-times menu-toggle" onclick="toggleMenu()" style="font-size: 18px;"></i>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+                <li class="nav-item" onclick="switchTab('pos')"><i class="fa-solid fa-cash-register"></i> Menu Kasir</li>
+                <li class="nav-item admin-only" onclick="switchTab('produk')"><i class="fa-solid fa-box-open"></i> Data Produk</li>
+                <li class="nav-item admin-only" onclick="switchTab('pengeluaran')"><i class="fa-solid fa-money-bill-transfer"></i> Pengeluaran</li>
+                <li class="nav-item admin-only" onclick="switchTab('laporan')"><i class="fa-solid fa-file-invoice-dollar"></i> Laporan</li>
+            </ul>
+            <div class="user-info">
+                <p id="logged-user-name">Nama User</p>
+                <span id="logged-user-role" style="background: var(--primary); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Admin</span>
+                <button class="btn btn-outline" style="width: 100%; margin-top: 10px; justify-content: center;" onclick="handleLogout()">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar for Mobile -->
+            <div class="topbar">
+                <i class="fa-solid fa-bars menu-toggle" onclick="toggleMenu()"></i>
+                <h3 id="topbar-title" style="margin: 0; margin-left: 15px; font-size: 18px; font-weight: 600;">Dashboard</h3>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                
+                <!-- DASHBOARD TAB -->
+                <div id="tab-dashboard" class="view-section">
+                    <h2 style="margin-bottom: 20px;">Ringkasan Hari Ini</h2>
+                    <div class="grid-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="fa-solid fa-money-bill-wave"></i></div>
+                            <div class="stat-details">
+                                <p>Total Penjualan</p>
+                                <h3 id="dash-sales">Rp 0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                            <div class="stat-details">
+                                <p>Pengeluaran</p>
+                                <h3 id="dash-expenses">Rp 0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="fa-solid fa-wallet"></i></div>
+                            <div class="stat-details">
+                                <p>Keuntungan Bersih</p>
+                                <h3 id="dash-profit">Rp 0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="fa-solid fa-receipt"></i></div>
+                            <div class="stat-details">
+                                <p>Jumlah Transaksi</p>
+                                <h3 id="dash-tx-count">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container" style="margin-top: 20px;">
+                        <h3>Transaksi Terakhir (Hari Ini)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>ID Transaksi</th>
+                                    <th>Total</th>
+                                    <th>Metode</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-tx">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- POS / MENU KASIR TAB -->
+                <div id="tab-pos" class="view-section hidden" style="height: 100%;">
+                    <div class="pos-container">
+                        <!-- Product List -->
+                        <div class="pos-products">
+                            <div style="margin-bottom: 15px;">
+                                <input type="text" class="form-control" id="pos-search" placeholder="Cari martabak..." onkeyup="renderPosProducts()">
+                            </div>
+                            <div class="product-grid" id="pos-product-grid">
+                                <!-- Products injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Cart -->
+                        <div class="pos-cart">
+                            <h3 style="margin-top:0; border-bottom: 1px solid var(--gray-light); padding-bottom: 10px;">Keranjang</h3>
+                            <div class="cart-items" id="cart-items-container">
+                                <!-- Cart items injected via JS -->
+                            </div>
+                            <div class="cart-total">
+                                <div class="cart-total-row">
+                                    <span>Total:</span>
+                                    <span id="cart-total-price" class="text-primary">Rp 0</span>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label>Metode Pembayaran</label>
+                                    <select id="payment-method" class="form-control">
+                                        <option value="Tunai">Tunai</option>
+                                        <option value="QRIS">QRIS</option>
+                                        <option value="Transfer">Transfer</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success" style="width: 100%; justify-content: center; padding: 15px; font-size: 16px;" onclick="checkout()">
+                                    <i class="fa-solid fa-check-circle"></i> Simpan Transaksi
+                                </button>
+                                <button class="btn btn-outline" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="clearCart()">
+                                    <i class="fa-solid fa-trash"></i> Kosongkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRODUK TAB -->
+                <div id="tab-produk" class="view-section hidden admin-only">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Kelola Data Produk</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-product')">
+                            <i class="fa-solid fa-plus"></i> Tambah Produk
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Produk</th>
+                                    <th>Harga Jual</th>
+                                    <th width="150">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-products">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PENGELUARAN TAB -->
+                <div id="tab-pengeluaran" class="view-section hidden admin-only">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Catatan Pengeluaran</h2>
+                        <button class="btn btn-danger" onclick="openModal('modal-expense')">
+                            <i class="fa-solid fa-plus"></i> Catat Pengeluaran
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Keterangan</th>
+                                    <th>Nominal</th>
+                                    <th width="100">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-expenses">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LAPORAN TAB -->
+                <div id="tab-laporan" class="view-section hidden admin-only">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <h2>Laporan Keuangan</h2>
+                        <select id="report-filter" class="form-control" style="width: auto;" onchange="renderReport()">
+                            <option value="hari">Hari Ini</option>
+                            <option value="minggu">Minggu Ini</option>
+                            <option value="bulan">Bulan Ini</option>
+                            <option value="semua">Semua Waktu</option>
+                        </select>
+                    </div>
+
+                    <div class="grid-cards" style="margin-bottom: 20px;">
+                        <div class="stat-card" style="background: #ffedd5; border: 1px solid var(--primary);">
+                            <div class="stat-details">
+                                <p style="color: var(--primary);">Total Pemasukan (Omset)</p>
+                                <h3 id="rep-income" class="text-primary">Rp 0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card" style="background: #fee2e2; border: 1px solid var(--secondary);">
+                            <div class="stat-details">
+                                <p style="color: var(--secondary);">Total Pengeluaran</p>
+                                <h3 id="rep-expense" class="text-secondary">Rp 0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card" style="background: #e0e7ff; border: 1px solid #4f46e5;">
+                            <div class="stat-details">
+                                <p style="color: #4f46e5;">Keuntungan / Saldo Bersih</p>
+                                <h3 id="rep-net" style="color: #4f46e5;">Rp 0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <h3 style="margin-bottom: 15px;">Detail Penjualan <span id="rep-period"></span></h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal & Waktu</th>
+                                    <th>ID Transaksi</th>
+                                    <th>Item Terjual</th>
+                                    <th>Metode</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-report-tx">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    
+    <!-- Modal Product -->
+    <div id="modal-product" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-product-title">Tambah Produk</h3>
+                <button class="modal-close" onclick="closeModal('modal-product')">&times;</button>
+            </div>
+            <form id="form-product" onsubmit="saveProduct(event)">
+                <input type="hidden" id="prod-id">
+                <div class="form-group">
+                    <label>Nama Produk</label>
+                    <input type="text" id="prod-name" class="form-control" required placeholder="Contoh: Martabak Manis Keju">
+                </div>
+                <div class="form-group">
+                    <label>Harga Jual</label>
+                    <input type="number" id="prod-price" class="form-control" required placeholder="Contoh: 25000">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Simpan Produk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Expense -->
+    <div id="modal-expense" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Catat Pengeluaran</h3>
+                <button class="modal-close" onclick="closeModal('modal-expense')">&times;</button>
+            </div>
+            <form id="form-expense" onsubmit="saveExpense(event)">
+                <div class="form-group">
+                    <label>Tanggal</label>
+                    <input type="date" id="exp-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Keterangan (Bahan/Operasional)</label>
+                    <input type="text" id="exp-desc" class="form-control" required placeholder="Contoh: Beli Telur, Gas LPG, Gaji">
+                </div>
+                <div class="form-group">
+                    <label>Nominal Pengeluaran</label>
+                    <input type="number" id="exp-amount" class="form-control" required placeholder="Contoh: 50000">
+                </div>
+                <button type="submit" class="btn btn-danger" style="width: 100%; justify-content: center;">Simpan Pengeluaran</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay Database -->
+    <div id="loading-overlay" class="modal hidden" style="z-index: 9999; flex-direction: column; color: white;">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 40px; margin-bottom: 15px; color: var(--primary);"></i>
+        <h3 style="color: white; font-weight: 600;">Menyinkronkan Data...</h3>
+        <p style="font-size: 13px; margin-top: 5px; color: var(--gray-light);">Jangan tutup halaman ini</p>
+    </div>
+
+    <!-- ==================== JAVASCRIPT (script.js) ==================== -->
+    <script>
+        // --- 0. GOOGLE SHEETS CONFIGURATION ---
+        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI (Lihat Panduan_Google_Sheet.md)
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyaQ3FwBmRVMWHbDoIa8jWMnmvBRAydzb6PdPS9OMh7VFegOTSn0MNMMfXCtQ5BtLWs/exec'; 
+
+        // --- 1. DATA INITIALIZATION & STORAGE ---
+        const STORE_KEY = 'martabak_pos_data';
+        
+        let db = {
+            users: [
+                { username: 'admin', password: 'admin', role: 'admin', name: 'Administrator' },
+                { username: 'kasir', password: 'kasir', role: 'kasir', name: 'Kasir Shift 1' }
+            ],
+            products: [],
+            transactions: [],
+            expenses: []
+        };
+
+        const defaultProducts = [
+            { id: 'P1', name: 'Martabak Manis Coklat Kacang', cost: 0, price: 20000 },
+            { id: 'P2', name: 'Martabak Manis Keju Spesial', cost: 0, price: 25000 }
+        ];
+
+        let currentUser = null;
+        let cart = [];
+
+        // Loading Indicator Handler
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            if (show) overlay.classList.remove('hidden');
+            else overlay.classList.add('hidden');
+        }
+
+        // Database API Call Handler
+        async function apiCall(action, payload = {}) {
+            if (!GOOGLE_SHEET_URL) return true; 
+            
+            try {
+                const res = await fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: action, data: payload })
+                });
+                const result = await res.json();
+                return result.status === 'success';
+            } catch(e) {
+                console.error("Gagal terhubung ke Google Sheets:", e);
+                alert('Gagal menyinkronkan data ke Server. Pastikan internet Anda aktif.');
+                return false;
+            }
+        }
+
+        async function initApp() {
+            if (GOOGLE_SHEET_URL) {
+                showLoading(true);
+                try {
+                    const res = await fetch(GOOGLE_SHEET_URL);
+                    const data = await res.json();
+                    
+                    db.products = data.products || [];
+                    db.transactions = data.transactions || [];
+                    db.expenses = data.expenses || [];
+                    
+                    saveDbLocal(); 
+                } catch(e) {
+                    console.error("Gagal load DB, menggunakan memori lokal", e);
+                    loadDbLocal();
+                }
+                showLoading(false);
+            } else {
+                loadDbLocal();
+            }
+
+            const loggedIn = sessionStorage.getItem('logged_in_user');
+            if (loggedIn) {
+                currentUser = JSON.parse(loggedIn);
+                showAppScreen();
+            }
+        }
+
+        function loadDbLocal() {
+            const stored = localStorage.getItem(STORE_KEY);
+            if (stored) db = JSON.parse(stored);
+            else { db.products = defaultProducts; saveDbLocal(); }
+        }
+
+        function saveDbLocal() {
+            localStorage.setItem(STORE_KEY, JSON.stringify(db));
+        }
+
+        // Helpers Fix: Mengonversi waktu database (UTC) menjadi Waktu Lokal yang presisi untuk filter
+        const formatRp = (angka) => 'Rp ' + parseInt(angka).toLocaleString('id-ID');
+        const generateId = (prefix) => prefix + Date.now().toString().slice(-6);
+        
+        const getLocalDateString = (dateObj = new Date()) => {
+            if (typeof dateObj === 'string') dateObj = new Date(dateObj); // auto parse string to Date object
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        const getTodayDate = () => getLocalDateString();
+
+        // --- 2. AUTHENTICATION ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const userIn = document.getElementById('username').value;
+            const passIn = document.getElementById('password').value;
+            const errorMsg = document.getElementById('login-error');
+
+            const user = db.users.find(u => u.username === userIn && u.password === passIn);
+            if (user) {
+                errorMsg.classList.add('hidden');
+                currentUser = user;
+                sessionStorage.setItem('logged_in_user', JSON.stringify(user));
+                document.getElementById('form-login').reset();
+                showAppScreen();
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('logged_in_user');
+            currentUser = null;
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function showAppScreen() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            
+            document.getElementById('logged-user-name').textContent = currentUser.name;
+            document.getElementById('logged-user-role').textContent = currentUser.role.toUpperCase();
+
+            const adminOnlyEls = document.querySelectorAll('.admin-only');
+            if (currentUser.role === 'kasir') {
+                adminOnlyEls.forEach(el => el.style.display = 'none');
+            } else {
+                adminOnlyEls.forEach(el => el.style.display = '');
+            }
+
+            document.getElementById('exp-date').value = getTodayDate();
+            switchTab('dashboard');
+        }
+
+        // --- 3. NAVIGATION ---
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            const titles = {
+                'dashboard': 'Dashboard',
+                'pos': 'Menu Kasir',
+                'produk': 'Data Produk',
+                'pengeluaran': 'Pengeluaran',
+                'laporan': 'Laporan Keuangan'
+            };
+            document.getElementById('topbar-title').textContent = titles[tabId];
+
+            const targetNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.textContent.toLowerCase().includes(tabId.replace('pengeluaran','pengeluaran').replace('pos','kasir').replace('produk','produk').replace('laporan','laporan').replace('dashboard','dashboard')));
+            if(targetNav) targetNav.classList.add('active');
+
+            if(window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+
+            if(tabId === 'dashboard') renderDashboard();
+            if(tabId === 'pos') renderPosProducts();
+            if(tabId === 'produk') renderProducts();
+            if(tabId === 'pengeluaran') renderExpenses();
+            if(tabId === 'laporan') renderReport();
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // --- 4. DASHBOARD LOGIC ---
+        function renderDashboard() {
+            const today = getTodayDate(); // Format: YYYY-MM-DD sesuai zona waktu lokal
+            
+            // Bug Fixed: Filter dengan mengonversi tanggal database ke tanggal zona waktu lokal terlebih dahulu
+            const todayTxs = db.transactions.filter(t => getLocalDateString(t.date) === today);
+            const todayExps = db.expenses.filter(e => e.date === today);
+
+            const totalSales = todayTxs.reduce((sum, t) => sum + t.total, 0);
+            const totalExp = todayExps.reduce((sum, e) => sum + Number(e.amount), 0);
+            const netProfit = totalSales - totalExp;
+
+            document.getElementById('dash-sales').textContent = formatRp(totalSales);
+            document.getElementById('dash-expenses').textContent = formatRp(totalExp);
+            document.getElementById('dash-profit').textContent = formatRp(netProfit);
+            document.getElementById('dash-tx-count').textContent = todayTxs.length;
+
+            const tbody = document.getElementById('dash-recent-tx');
+            tbody.innerHTML = '';
+            todayTxs.slice().reverse().slice(0, 5).forEach(tx => {
+                const tr = document.createElement('tr');
+                const time = new Date(tx.date).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+                tr.innerHTML = `
+                    <td>${time}</td>
+                    <td><span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${tx.id}</span></td>
+                    <td class="text-primary font-weight-bold">${formatRp(tx.total)}</td>
+                    <td><span style="font-size: 12px; background: var(--gray-light); padding: 2px 8px; border-radius: 10px;">${tx.paymentMethod}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            if(todayTxs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--gray);">Belum ada transaksi hari ini</td></tr>`;
+            }
+        }
+
+        // --- 5. PRODUK LOGIC ---
+        function renderProducts() {
+            const tbody = document.getElementById('table-products');
+            tbody.innerHTML = '';
+            db.products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${p.name}</strong></td>
+                    <td>${formatRp(p.price)}</td>
+                    <td>
+                        <button class="btn btn-outline" style="padding: 5px 10px;" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('prod-id').value;
+            const name = document.getElementById('prod-name').value;
+            const price = Number(document.getElementById('prod-price').value);
+
+            // Kita set cost: 0 secara rahasia agar Google Sheet yang sudah memiliki kolom HPP tidak error
+            const productData = {
+                id: idInput || generateId('PRD'),
+                name, cost: 0, price
+            };
+
+            showLoading(true);
+            const success = await apiCall('save_product', productData);
+            
+            if (success) {
+                if (idInput) {
+                    const index = db.products.findIndex(p => p.id === idInput);
+                    if (index !== -1) db.products[index] = productData;
+                } else {
+                    db.products.push(productData);
+                }
+                saveDbLocal();
+                renderProducts();
+                closeModal('modal-product');
+                document.getElementById('form-product').reset();
+            }
+            showLoading(false);
+        }
+
+        function editProduct(id) {
+            const p = db.products.find(x => x.id === id);
+            if (p) {
+                document.getElementById('prod-id').value = p.id;
+                document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-price').value = p.price;
+                document.getElementById('modal-product-title').textContent = 'Edit Produk';
+                openModal('modal-product');
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (confirm('Yakin ingin menghapus produk ini?')) {
+                showLoading(true);
+                const success = await apiCall('delete_product', { id: id });
+                if (success) {
+                    db.products = db.products.filter(p => p.id !== id);
+                    saveDbLocal();
+                    renderProducts();
+                }
+                showLoading(false);
+            }
+        }
+
+        document.querySelector('[onclick="openModal(\'modal-product\')"]').addEventListener('click', () => {
+            document.getElementById('form-product').reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('modal-product-title').textContent = 'Tambah Produk';
+        });
+
+        // --- 6. POS (KASIR) LOGIC ---
+        function renderPosProducts() {
+            const grid = document.getElementById('pos-product-grid');
+            const search = document.getElementById('pos-search').value.toLowerCase();
+            grid.innerHTML = '';
+            
+            const filtered = db.products.filter(p => p.name.toLowerCase().includes(search));
+            
+            filtered.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.onclick = () => addToCart(p);
+                div.innerHTML = `
+                    <h4>${p.name}</h4>
+                    <p>${formatRp(p.price)}</p>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function addToCart(product) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function updateCartQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+                renderCart();
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>${formatRp(item.price)}</p>
+                    </div>
+                    <div class="cart-qty">
+                        <button class="qty-btn" onclick="updateCartQty('${item.id}', -1)">-</button>
+                        <span style="font-weight:600; width: 20px; text-align: center;">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateCartQty('${item.id}', 1)">+</button>
+                    </div>
+                    <div style="font-weight:600; font-size:14px; min-width: 80px; text-align: right;">
+                        ${formatRp(subtotal)}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            if (cart.length === 0) container.innerHTML = '<p style="text-align:center; color:var(--gray); margin-top:20px;">Keranjang kosong</p>';
+            document.getElementById('cart-total-price').textContent = formatRp(total);
+        }
+
+        function clearCart() {
+            cart = [];
+            renderCart();
+        }
+
+        async function checkout() {
+            if (cart.length === 0) { alert('Keranjang belanja masih kosong!'); return; }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const method = document.getElementById('payment-method').value;
+
+            const transaction = {
+                id: generateId('TRX'),
+                date: new Date().toISOString(), // Standard format database 
+                items: [...cart],
+                total: total,
+                paymentMethod: method,
+                kasir: currentUser.name
+            };
+
+            showLoading(true);
+            const success = await apiCall('save_transaction', transaction);
+            
+            if (success) {
+                db.transactions.push(transaction);
+                saveDbLocal();
+                alert(`Transaksi Berhasil disimpan!\nID: ${transaction.id}\nTotal: ${formatRp(total)}\nMetode: ${method}`);
+                clearCart();
+                document.getElementById('pos-search').value = '';
+                renderPosProducts();
+            }
+            showLoading(false);
+        }
+
+        // --- 7. PENGELUARAN LOGIC ---
+        function renderExpenses() {
+            const tbody = document.getElementById('table-expenses');
+            tbody.innerHTML = '';
+            const sorted = [...db.expenses].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            sorted.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${e.date}</td>
+                    <td>${e.description}</td>
+                    <td class="text-danger font-weight-bold">${formatRp(e.amount)}</td>
+                    <td>
+                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="deleteExpense('${e.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function saveExpense(e) {
+            e.preventDefault();
+            const date = document.getElementById('exp-date').value;
+            const desc = document.getElementById('exp-desc').value;
+            const amount = Number(document.getElementById('exp-amount').value);
+
+            const expData = {
+                id: generateId('EXP'),
+                date, description: desc, amount
+            };
+
+            showLoading(true);
+            const success = await apiCall('save_expense', expData);
+            
+            if (success) {
+                db.expenses.push(expData);
+                saveDbLocal();
+                renderExpenses();
+                closeModal('modal-expense');
+                document.getElementById('form-expense').reset();
+                document.getElementById('exp-date').value = getTodayDate();
+            }
+            showLoading(false);
+        }
+
+        async function deleteExpense(id) {
+            if (confirm('Yakin ingin menghapus catatan pengeluaran ini?')) {
+                showLoading(true);
+                const success = await apiCall('delete_expense', { id: id });
+                if (success) {
+                    db.expenses = db.expenses.filter(e => e.id !== id);
+                    saveDbLocal();
+                    renderExpenses();
+                }
+                showLoading(false);
+            }
+        }
+
+        // --- 8. LAPORAN LOGIC ---
+        function renderReport() {
+            const filter = document.getElementById('report-filter').value;
+            const todayStr = getTodayDate();
+            
+            let filteredTx = [];
+            let filteredExp = [];
+            let periodText = "";
+
+            // Bug Fixed: Memastikan semua filter waktu menggunakan waktu lokal menggunakan getLocalDateString
+            if (filter === 'hari') {
+                periodText = "(Hari Ini)";
+                filteredTx = db.transactions.filter(t => getLocalDateString(t.date) === todayStr);
+                filteredExp = db.expenses.filter(e => e.date === todayStr);
+            } else if (filter === 'minggu') {
+                periodText = "(7 Hari Terakhir)";
+                const weekAgo = new Date();
+                weekAgo.setDate(new Date().getDate() - 7);
+                const weekAgoStr = getLocalDateString(weekAgo);
+                
+                filteredTx = db.transactions.filter(t => getLocalDateString(t.date) >= weekAgoStr);
+                filteredExp = db.expenses.filter(e => e.date >= weekAgoStr);
+            } else if (filter === 'bulan') {
+                periodText = "(Bulan Ini)";
+                const currentMonth = todayStr.substring(0, 7); // YYYY-MM
+                filteredTx = db.transactions.filter(t => getLocalDateString(t.date).startsWith(currentMonth));
+                filteredExp = db.expenses.filter(e => e.date.startsWith(currentMonth));
+            } else {
+                periodText = "(Semua Waktu)";
+                filteredTx = [...db.transactions];
+                filteredExp = [...db.expenses];
+            }
+
+            document.getElementById('rep-period').textContent = periodText;
+
+            const totalIncome = filteredTx.reduce((sum, t) => sum + t.total, 0);
+            const totalExpense = filteredExp.reduce((sum, e) => sum + Number(e.amount), 0);
+            const netProfit = totalIncome - totalExpense;
+
+            document.getElementById('rep-income').textContent = formatRp(totalIncome);
+            document.getElementById('rep-expense').textContent = formatRp(totalExpense);
+            document.getElementById('rep-net').textContent = formatRp(netProfit);
+
+            const tbody = document.getElementById('table-report-tx');
+            tbody.innerHTML = '';
+            
+            filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            filteredTx.forEach(tx => {
+                const tr = document.createElement('tr');
+                const dateObj = new Date(tx.date);
+                const dateStr = dateObj.toLocaleDateString('id-ID') + ' ' + dateObj.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+                
+                const itemsStr = tx.items.map(i => `${i.qty}x ${i.name}`).join('<br>');
+
+                tr.innerHTML = `
+                    <td>${dateStr}</td>
+                    <td><span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size:12px;">${tx.id}</span></td>
+                    <td style="font-size: 13px;">${itemsStr}</td>
+                    <td><span style="font-size: 12px; background: var(--gray-light); padding: 2px 8px; border-radius: 10px;">${tx.paymentMethod}</span></td>
+                    <td class="text-primary font-weight-bold">${formatRp(tx.total)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (filteredTx.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--gray);">Belum ada data penjualan pada periode ini</td></tr>`;
+            }
+        }
+
+        // Mulai Aplikasi!
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>
